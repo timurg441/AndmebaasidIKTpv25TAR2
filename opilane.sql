@@ -9,4 +9,8 @@ perenimi varchar(30) NOT null,
 synniaeg date,
 aadress TEXT,
 kas_opib bit);
+--kuvab tabeli, * - kõik väljad
 SELECT * FROM opilane;
+
+--tabeli kustutamine
+DROP TABLE opilane;
