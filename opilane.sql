@@ -21,3 +21,10 @@ VALUES ('Nikita', 'Petrov', '2023-12-12', 1),
 ('Nikita', 'Alekseev', '2020-12-12', 1),
 ('Nikita', 'Nikitin', '2021-12-12', 1);
 Select * from opilane; 
+
+--ühe kirje kustutamine
+DELETE FROM opilane WHERE opilaneID=5;
+
+--kirje uuendamine
+UPDATE opilane SET kas_opib=0
+WHERE opilaneID=3;
