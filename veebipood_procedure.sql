@@ -178,3 +178,42 @@ WHERE brand_id=@id;
 END;
 --kutse
 EXEC uuendaBrand 3, 'uusAudi';
+
+--Iseseisvalt: tabel Categoryes - loo protseduurid, millega saab lisada, uuendada, kustutada
+
+--lisada procedure
+CREATE PROCEDURE lisaCategory
+@category_name varchar(30)
+as
+BEGIN
+    INSERT INTO categories(category_name) VALUES (@category_name);
+	SELECT * FROM categories;
+END
+
+EXEC lisaCategory 'pusa';
+
+--uuendada procedure
+CREATE PROCEDURE uuendaCategory
+@id int,
+@uus_nimi varchar(30)
+AS
+BEGIN
+select * from categories;
+UPDATE categories SET category_name=@uus_nimi
+WHERE category_id=@id;
+END;
+--kutse
+EXEC uuendaCategory 3, 'uusPusa';
+
+--kustuda procedure
+CREATE PROCEDURE kustutaCategory
+@id int
+AS
+BEGIN
+SELECT * FROM categories;
+DELETE FROM categories WHERE category_id=@id;
+SELECT * FROM categories;
+END;
+
+--kutse
+EXEC kustutaCategory 1;
