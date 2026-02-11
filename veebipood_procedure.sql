@@ -189,7 +189,7 @@ BEGIN
     INSERT INTO categories(category_name) VALUES (@category_name);
 	SELECT * FROM categories;
 END
-
+--kutse
 EXEC lisaCategory 'pusa';
 
 --uuendada procedure
@@ -214,6 +214,5 @@ SELECT * FROM categories;
 DELETE FROM categories WHERE category_id=@id;
 SELECT * FROM categories;
 END;
-
 --kutse
 EXEC kustutaCategory 1;
