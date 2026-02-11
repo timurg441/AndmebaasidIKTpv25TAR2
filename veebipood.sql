@@ -1,5 +1,5 @@
-CREATE DATABASE veebipoodGrossholm;
-USE veebipoodGrossholm;
+CREATE DATABASE veebipoodGrechishkin;
+USE veebipoodGrechishkin;
 
 --table Categories
 CREATE TABLE categories(
@@ -21,8 +21,8 @@ model_year int,
 list_price decimal(3,2));
 
 INSERT INTO products(product_name, brand_id, category_id, model_year, list_price)
-VALUES ('Gucci T-Särk', 1, 1, '2024', '400'),
-('YSL Pusa', 3, 3, '2020', '799.99');
+VALUES ('ERD T-Särk', 1, 1, '2024', '400'),
+('Balenciaga Pusa', 3, 3, '2020', '799.99');
 
 select * from products
 
@@ -34,7 +34,7 @@ brand_id int PRIMARY KEY identity(1,1),
 brand_name varchar(30) unique);
 
 INSERT INTO brands(brand_name)
-VALUES ('Gucci'), ('YSL');
+VALUES ('Balenciaga'), ('ERD');
 
 select * from brands
 
