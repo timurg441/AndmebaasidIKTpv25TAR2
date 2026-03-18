@@ -21,13 +21,13 @@ SELECT * FROM ajakirjanik;
 
 
 INSERT into uudised(uudisPealkiri,kuupaev,ajakirjanikID)
-values ('Homme on ises tˆˆ p‰ev','2025-03-12',1),
-('T‰na on andmebaaside tund','2025-03-12',1),
-('T‰na on vihane ilm','2025-03-12',2)
+values ('Homme on ises t√∂√∂ p√§ev','2025-03-12',1),
+('T√§na on andmebaaside tund','2025-03-12',1),
+('T√§na on vihane ilm','2025-03-12',2)
 
 Select * from uudised;
 SELECT * FROM ajakirjanik;
---select p‰ring 2 tabelite pıhjal
+--select p√§ring 2 tabelite p√µhjal
 SELECT * FROM uudised,ajakirjanik
 WHERE uudised.ajakirjanikID=ajakirjanik.ajakirjanikID;
 
@@ -51,7 +51,7 @@ SELECT * From loodudUudsed;
 --kasutame view tingimus ka
 SELECT * FROM loodudUudsed
 WHERE nimi Like 'Lev';
---INNER JOIN - sisemine ¸hendamine
+--INNER JOIN - sisemine √ºhendamine
 SELECT u.uudisPealkiri,a.nimi as autor
 FROM uudised as u INNER JOIN ajakirjanik as a
 ON u.ajakirjanikID=a.ajakirjanikID;
@@ -61,7 +61,7 @@ SELECT u.uudisPealkiri,a.nimi  as autor, kuupaev
 FROM uudised as u INNER JOIN ajakirjanik as A
 ON u.ajakirjanikID=a.ajakirjanikID;
 
---kuvame salvestatud view p‰ring
+--kuvame salvestatud view p√§ring
 select uudisPealkiri, YEAR(kuupaev) as aasta
 from kuupaevaUudised;
 
@@ -82,7 +82,7 @@ UPDATE uudised SET ajalehtID=2;
 SELECT * FROM ajaleht;
 select * from uudised;
 
---select 3 tabeli pıhjal
+--select 3 tabeli p√µhjal
 SELECT u.uudisPealkiri,a.nimi as autor,aj.ajalehtNimetus
 FROM (uudised as u INNER JOIN ajakirjanik as a
 ON u.ajakirjanikID=a.ajakirjanikID)
@@ -105,3 +105,26 @@ SELECT * FROM AutoriUudisedAjalehes;
 UPDATE AutoriUudisedAjalehes SET kuupaev='2026-03-18';
 
 --viewUudisedAjakirjanikud.sql lisa Moodlesse ja github'i
+
+--Tee view, mis n√§itab uudised konkretsel kuup√§eval
+CREATE VIEW UudisedKuupaeval AS
+SELECT u.uudisPealkiri, a.nimi AS autor, aj.ajalehtNimetus, u.kuupaev
+FROM uudised u
+INNER JOIN ajakirjanik a ON u.ajakirjanikID = a.ajakirjanikID
+INNER JOIN ajaleht aj ON u.ajalehtID = aj.ajalehtID
+WHERE u.kuupaev = '2025-03-12';
+
+SELECT * FROM UudisedKuupaeval;
+
+--oma 1 ajakirjaniku view
+CREATE VIEW nimi3tahte AS
+select * from ajakirjanik
+Where len(nimi)=3;
+
+SELECT * FROM nimi3tahte;
+
+--oma 2 ajalehte view
+CREATE VIEW ajalehedtahega AS
+SELECT * from ajaleht
+where ajalehtNimetus like 'D%';
+SELECT * FROM ajalehedtahega;
