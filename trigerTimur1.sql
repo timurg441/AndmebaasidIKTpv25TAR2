@@ -1,0 +1,104 @@
+Create database trigerTimur1;
+USE trigerTimur1;
+--tabel Linnad
+create table Linnad
+(
+	linnID int primary key identity(1,1),
+	linnanimi varchar(50) unique,
+	rahvaarv int not null
+);
+
+--tabel logi
+Create table logi(
+id int PRIMARY KEY IDENTITY (1,1),
+kuupaev DATETIME,
+andmed TEXT,
+kasutaja varchar(25)
+);
+
+--tabel maakond
+Create table maakonnad(
+maakondId int PRIMARY KEY IDENTITY (1,1),
+maakondNimi varchar(25) unique
+);
+
+--foreign key tabelis linnad
+ALTER TABLE linnad ADD maakondID int;
+SELECT * FROM linnad;
+ALTER TABLE linnad ADD CONSTRAINT fk_maakond
+FOREIGN KEY (maakondID) REFERENCES maakonnad(maakondID);
+--täidame tabelid
+--maakonnad
+INSERT INTO maakonnad
+VALUES ('Harjumaa'), ('Pärnumaa'), ('Virumaa');
+
+SELECT * FROM maakonnad;
+INSERT INTO linnad (linnanimi, rahvaarv, maakondId)
+VALUES ('Tallinn', 600000, 1), ('Rakvere', 150000, 3);
+
+Select * from linnad, maakonnad
+WHERE linnad.maakondId=maakonnad.maakondId;
+--sama paring inner join'iga
+Select * from linnad inner join maakonnad
+ON linnad.maakondId=maakonnad.maakondId;
+--triger, mis jälgib kaks seostatud tabelit
+CREATE TRIGGER linnaLisamine
+ON linnad
+FOR INSERT
+AS
+INSERT INTO logi(kuupaev, andmed, kasutaja)
+SELECT
+GETDATE(),
+CONCAT('lisatud linn: ', inserted.linnanimi, ', ', inserted.rahvaarv, ', ', m.maakondNimi),
+SYSTEM_USER
+FROM inserted INNER JOIN maakonnad m
+ON inserted.maakondId=m.maakondId;
+
+--kontroll
+INSERT INTO linnad(linnanimi, rahvaarv, maakondId)
+VALUES ('Paide', 100000, 2);
+
+select * from logi;
+select * from linnad;
+
+--triger mis jälgib andmete kustutamine seotud tabelite põhjal
+CREATE TRIGGER linnaKustutamine
+ON linnad
+FOR DELETE
+AS
+INSERT INTO logi(kuupaev, andmed, kasutaja)
+SELECT
+getdate(),
+CONCAT('kustutatud linn: ', deleted.linnanimi, ', ', deleted.rahvaarv, ', ', m.maakondNimi),
+SYSTEM_USER
+FROM deleted INNER JOIN maakonnad m
+ON deleted.maakondId = m.maakondId;
+
+--kontroll
+DELETE FROM linnad where linnID=2;
+SELECT * FROM logi;
+
+--triger, mis jälgib andmete uuendamine kahes tabelis
+CREATE TRIGGER linnaUuendamine
+ON linnad
+FOR UPDATE
+AS
+INSERT INTO logi(kuupaev, andmed, kasutaja)
+SELECT 
+getdate(),
+CONCAT(
+'vana linna andmed : ', deleted.linnanimi, ', ', deleted.rahvaarv, ', ', m1.maakondNimi, 
+' || uue linna andmed : ', inserted.linnanimi, ', ', inserted.rahvaarv, ', ', m2.maakondNimi),
+SYSTEM_USER
+FROM deleted
+INNER JOIN inserted ON deleted.linnId = inserted.linnId
+INNER JOIN maakonnad m1 ON deleted.maakondId = m1.maakondId
+INNER JOIN maakonnad m2 ON inserted.maakondId = m2.maakondId;
+
+--kontroll
+SELECT * FROM linnad
+SELECT * FROM maakonnad
+UPDATE linnad SET maakondID=1 WHERE linnID=5;
+
+SELECT * FROM logi;
+UPDATE linnad SET maakondID=1, linnanimi='Uus Paide' WHERE linnID=5;
